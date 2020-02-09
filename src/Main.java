@@ -1,5 +1,8 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
@@ -12,12 +15,26 @@ public class Main {
                 new Person("Jan", "Kowalski")
         );
 
+        // Utworzymy posortowana liste Stringow (name + lastName z Person) z Listy Person
+        // Odfiltrujemy zaczynajace sie nie na samogloske
+        // stringi wielka litera (calosc napisu)
+        // na kolekcji stringow foreach z lambda - wydrukowanie do konsoli
 
-        people
+        final Predicate<String> vowelAtTheBeginningPredicate = s -> {
+            char ch = s.toLowerCase().charAt(0);
+            return ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u';
+        };
+        
+        List<String> peoplesNames = people
                 .stream()
-                .map(person -> person.lastName)
-                .distinct()
-                .forEach(s -> System.out.println(s));
+                .map(person -> person.name + " " + person.lastName)
+                .filter(vowelAtTheBeginningPredicate.negate())
+                .map(String::toUpperCase)
+                .sorted()
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        peoplesNames.forEach(System.out::println);
+
     }
 }
 
